@@ -189,4 +189,35 @@ namespace _wapi_ntdll {
 #endif
 		return ticks;
 	}
+
+	//----------------------------
+	// NtSetTimerResolution
+	NTSTATUS NTAPI NtSetTimerResolution(
+		IN ULONG                DesiredResolution,
+		IN BOOLEAN              SetResolution,
+		OUT PULONG              CurrentResolution)
+	{
+
+		typedef INT(NTAPI *NtSetTimerResolutionPrototype)(ULONG DesiredResolution, BOOLEAN SetResolution, PULONG CurrentResolution);
+		HMODULE hDLL = _wapi_api::GetNTDLLHmodule();
+		if (hDLL == NULL)
+			return NULL;
+		NtSetTimerResolutionPrototype ntSetTimerResolution = (NtSetTimerResolutionPrototype)GetProcAddress(hDLL, "NtSetTimerResolution");
+		if (ntSetTimerResolution == NULL)
+		{
+#ifdef WAPI_FULL_LOG
+			printf("[-] Failed to find NtSetTimerResolution\n");
+#endif
+			return NULL;
+		}
+#ifdef WAPI_FULL_LOG
+		printf("[+] Found NtSetTimerResolution address. Address --> 0x%x\n", (size_t)ntSetTimerResolution);
+		printf("[*] Calling NtSetTimerResolution...\n");
+#endif
+		NTSTATUS result = ntSetTimerResolution(DesiredResolution, SetResolution, CurrentResolution);
+#ifdef WAPI_FULL_LOG
+		printf("[+] result --> %d\n\n", result);
+#endif
+		return result;
+	}
 }
