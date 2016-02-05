@@ -16,19 +16,22 @@
 #include "wapi.h"
 
 namespace _wapi_api {
+	void Log(const char* _Format, ...)
+	{
+#ifdef WAPI_FULL_LOG
+		printf(_Format, new va_list);
+#endif
+	}
+
 	HMODULE GetNTDLLHmodule()
 	{
 		HMODULE hDLL = GetModuleHandle(TEXT("ntdll.dll"));
 		if (hDLL == NULL)
 		{
-#ifdef WAPI_FULL_LOG
-			printf("[-] Failed to find ntdll.dll\n");
-#endif
+			_wapi_api::Log("[-] Failed to find ntdll.dll\n");
 			return NULL;
 		}
-#ifdef WAPI_FULL_LOG
-		printf("[+] Got ntdll.dll handle. Address --> 0x%x\n", (size_t)hDLL);
-#endif
+		_wapi_api::Log("[+] Got ntdll.dll handle. Address --> 0x%x\n", (size_t)hDLL);
 		return hDLL;
 	}
 }
@@ -53,15 +56,11 @@ namespace _wapi_ntdll {
 		KiUserApcDispatcherPrototype UserApcDispatcher = (KiUserApcDispatcherPrototype)GetProcAddress(hDLL, "KiUserApcDispatcher");
 		if (UserApcDispatcher == NULL)
 		{
-#ifdef WAPI_FULL_LOG
-			printf("[-] Failed to find KiUserApcDispatcher\n");
-#endif
+			_wapi_api::Log("[-] Failed to find KiUserApcDispatcher\n");
 			return;
 		}
-#ifdef WAPI_FULL_LOG
-		printf("[+] Found KiUserApcDispatcher address. Address --> 0x%x\n", (size_t)UserApcDispatcher);
-		printf("[*] Calling KiUserApcDispatcher...\n");
-#endif
+		_wapi_api::Log("[+] Found KiUserApcDispatcher address. Address --> 0x%x\n", (size_t)UserApcDispatcher);
+		_wapi_api::Log("[*] Calling KiUserApcDispatcher...\n");
 		UserApcDispatcher(Unused1, Unused2, Unused3, ContextStart, ContextBody);
 	}
 
@@ -77,20 +76,14 @@ namespace _wapi_ntdll {
 		NtAlertThreadPrototype ntAlertThread = (NtAlertThreadPrototype)GetProcAddress(hDLL, "NtAlertThread");
 		if (ntAlertThread == NULL)
 		{
-#ifdef WAPI_FULL_LOG
-			printf("[-] Failed to find NtAlertThread\n");
-#endif
+			_wapi_api::Log("[-] Failed to find NtAlertThread\n");
 			return NULL;
 		}
-#ifdef WAPI_FULL_LOG
-		printf("[+] Found NtAlertThread address. Address --> 0x%x\n", (size_t)ntAlertThread);
-		printf("[*] Calling NtAlertThread...\n");
-#endif
+		_wapi_api::Log("[+] Found NtAlertThread address. Address --> 0x%x\n", (size_t)ntAlertThread);
+		_wapi_api::Log("[*] Calling NtAlertThread...\n");
 		NTSTATUS result = ntAlertThread(ThreadHandle);
-#ifdef WAPI_FULL_LOG
-		printf("[+] thread alerted state (returned) --> %d\n\n", result);
+		_wapi_api::Log("[+] thread alerted state (returned) --> %d\n\n", result);
 		return result;
-#endif
 	}
 
 	//----------------------------
@@ -107,20 +100,14 @@ namespace _wapi_ntdll {
 		CallbackReturnPrototype ntCallbackReturn = (CallbackReturnPrototype)GetProcAddress(hDLL, "NtCallbackReturn");
 		if (ntCallbackReturn == NULL)
 		{
-#ifdef WAPI_FULL_LOG
-			printf("[-] Failed to find NtCallbackReturn\n");
-#endif
+			_wapi_api::Log("[-] Failed to find NtCallbackReturn\n");
 			return NULL;
 		}
-#ifdef WAPI_FULL_LOG
-		printf("[+] Found NtCallbackReturn address. Address --> 0x%x\n", (size_t)ntCallbackReturn);
-		printf("[*] Calling NtCallbackReturn...\n");
-#endif
+		_wapi_api::Log("[+] Found NtCallbackReturn address. Address --> 0x%x\n", (size_t)ntCallbackReturn);
+		_wapi_api::Log("[*] Calling NtCallbackReturn...\n");
 		NTSTATUS result = ntCallbackReturn(Result, ResultLength, Status);
-#ifdef WAPI_FULL_LOG
-		printf("[+] returned --> %d\n\n", result);
+		_wapi_api::Log("[+] returned --> %d\n\n", result);
 		return result;
-#endif
 	}
 
 
@@ -142,19 +129,13 @@ namespace _wapi_ntdll {
 		RtlComputeCrc32Prototype ComputeCrc32 = (RtlComputeCrc32Prototype)GetProcAddress(hDLL, "RtlComputeCrc32");
 		if (ComputeCrc32 == NULL)
 		{
-#ifdef WAPI_FULL_LOG
-			printf("[-] Failed to find RtlComputeCrc32\n");
-#endif
+			_wapi_api::Log("[-] Failed to find RtlComputeCrc32\n");
 			return NULL;
 		}
-#ifdef WAPI_FULL_LOG
-		printf("[+] Found RtlComputeCrc32 address. Address --> 0x%x\n", (size_t)ComputeCrc32);
-		printf("[*] Calling RtlComputeCrc32...\n");
-#endif
+		_wapi_api::Log("[+] Found RtlComputeCrc32 address. Address --> 0x%x\n", (size_t)ComputeCrc32);
+		_wapi_api::Log("[*] Calling RtlComputeCrc32...\n");
 		INT iCRC32 = ComputeCrc32(accumCRC32, (BYTE*)buffer, 3);
-#ifdef WAPI_FULL_LOG
-		printf("[+] Computed CRC32 --> 0x%x\n\n", iCRC32);
-#endif
+		_wapi_api::Log("[+] Computed CRC32 --> 0x%x\n\n", iCRC32);
 		return iCRC32;
 	}
 
@@ -174,19 +155,13 @@ namespace _wapi_ntdll {
 		NtGetTickCountPrototype GetTickCount = (NtGetTickCountPrototype)GetProcAddress(hDLL, "NtGetTickCount");
 		if (GetTickCount == NULL)
 		{
-#ifdef WAPI_FULL_LOG
-			printf("[-] Failed to find NtGetTickCount\n");
-#endif
+			_wapi_api::Log("[-] Failed to find NtGetTickCount\n");
 			return NULL;
 		}
-#ifdef WAPI_FULL_LOG
-		printf("[+] Found NtGetTickCount address. Address --> 0x%x\n", (size_t)GetTickCount);
-		printf("[*] Calling NtGetTickCount...\n");
-#endif
+		_wapi_api::Log("[+] Found NtGetTickCount address. Address --> 0x%x\n", (size_t)GetTickCount);
+		_wapi_api::Log("[*] Calling NtGetTickCount...\n");
 		ULONG ticks = GetTickCount();
-#ifdef WAPI_FULL_LOG
-		printf("[+] ticks --> %d\n\n", ticks);
-#endif
+		_wapi_api::Log("[+] ticks --> %d\n\n", ticks);
 		return ticks;
 	}
 
@@ -205,19 +180,13 @@ namespace _wapi_ntdll {
 		NtSetTimerResolutionPrototype ntSetTimerResolution = (NtSetTimerResolutionPrototype)GetProcAddress(hDLL, "NtSetTimerResolution");
 		if (ntSetTimerResolution == NULL)
 		{
-#ifdef WAPI_FULL_LOG
-			printf("[-] Failed to find NtSetTimerResolution\n");
-#endif
+			_wapi_api::Log("[-] Failed to find NtSetTimerResolution\n");
 			return NULL;
 		}
-#ifdef WAPI_FULL_LOG
-		printf("[+] Found NtSetTimerResolution address. Address --> 0x%x\n", (size_t)ntSetTimerResolution);
-		printf("[*] Calling NtSetTimerResolution...\n");
-#endif
+		_wapi_api::Log("[+] Found NtSetTimerResolution address. Address --> 0x%x\n", (size_t)ntSetTimerResolution);
+		_wapi_api::Log("[*] Calling NtSetTimerResolution...\n");
 		NTSTATUS result = ntSetTimerResolution(DesiredResolution, SetResolution, CurrentResolution);
-#ifdef WAPI_FULL_LOG
-		printf("[+] result --> %d\n\n", result);
-#endif
+		_wapi_api::Log("[+] result --> %d\n\n", result);
 		return result;
 	}
 
@@ -236,19 +205,13 @@ namespace _wapi_ntdll {
 		NtQueryTimerResolutionPrototype ntQueryTimerResolution = (NtQueryTimerResolutionPrototype)GetProcAddress(hDLL, "NtSetTimerResolution");
 		if (ntQueryTimerResolution == NULL)
 		{
-#ifdef WAPI_FULL_LOG
-			printf("[-] Failed to find NtQueryTimerResolution\n");
-#endif
+			_wapi_api::Log("[-] Failed to find NtQueryTimerResolution\n");
 			return NULL;
 		}
-#ifdef WAPI_FULL_LOG
-		printf("[+] Found NtQueryTimerResolution address. Address --> 0x%x\n", (size_t)ntQueryTimerResolution);
-		printf("[*] Calling NtQueryTimerResolution...\n");
-#endif
+		_wapi_api::Log("[+] Found NtQueryTimerResolution address. Address --> 0x%x\n", (size_t)ntQueryTimerResolution);
+		_wapi_api::Log("[*] Calling NtQueryTimerResolution...\n");
 		NTSTATUS result = ntQueryTimerResolution(MinimumResolution, MaximumResolution, CurrentResolution);
-#ifdef WAPI_FULL_LOG
-		printf("[+] result --> %d\n\n", result);
-#endif
+		_wapi_api::Log("[+] result --> %d\n\n", result);
 		return result;
 	}
 }
