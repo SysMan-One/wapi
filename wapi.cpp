@@ -167,7 +167,7 @@ namespace _wapi_ntdll {
 	// NtGetTickCount
 	ULONG NTAPI NtGetTickCount()
 	{
-		typedef INT(NTAPI *NtGetTickCountPrototype)();
+		typedef ULONG(NTAPI *NtGetTickCountPrototype)();
 		HMODULE hDLL = _wapi_api::GetNTDLLHmodule();
 		if (hDLL == NULL)
 			return NULL;
@@ -198,7 +198,7 @@ namespace _wapi_ntdll {
 		OUT PULONG              CurrentResolution)
 	{
 
-		typedef INT(NTAPI *NtSetTimerResolutionPrototype)(ULONG DesiredResolution, BOOLEAN SetResolution, PULONG CurrentResolution);
+		typedef NTSTATUS(NTAPI *NtSetTimerResolutionPrototype)(ULONG DesiredResolution, BOOLEAN SetResolution, PULONG CurrentResolution);
 		HMODULE hDLL = _wapi_api::GetNTDLLHmodule();
 		if (hDLL == NULL)
 			return NULL;
@@ -229,7 +229,7 @@ namespace _wapi_ntdll {
 		OUT PULONG              CurrentResolution)
 	{
 
-		typedef INT(NTAPI *NtQueryTimerResolutionPrototype)(PULONG MinimumResolution, PULONG MaximumResolution, PULONG CurrentResolution);
+		typedef NTSTATUS(NTAPI *NtQueryTimerResolutionPrototype)(PULONG MinimumResolution, PULONG MaximumResolution, PULONG CurrentResolution);
 		HMODULE hDLL = _wapi_api::GetNTDLLHmodule();
 		if (hDLL == NULL)
 			return NULL;
