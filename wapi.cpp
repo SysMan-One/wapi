@@ -220,4 +220,35 @@ namespace _wapi_ntdll {
 #endif
 		return result;
 	}
+
+	//----------------------------
+	// NtQueryTimerResolution
+	NTSTATUS NTAPI NtQueryTimerResolution(
+		OUT PULONG              MinimumResolution,
+		OUT PULONG              MaximumResolution,
+		OUT PULONG              CurrentResolution)
+	{
+
+		typedef INT(NTAPI *NtQueryTimerResolutionPrototype)(PULONG MinimumResolution, PULONG MaximumResolution, PULONG CurrentResolution);
+		HMODULE hDLL = _wapi_api::GetNTDLLHmodule();
+		if (hDLL == NULL)
+			return NULL;
+		NtQueryTimerResolutionPrototype ntQueryTimerResolution = (NtQueryTimerResolutionPrototype)GetProcAddress(hDLL, "NtSetTimerResolution");
+		if (ntQueryTimerResolution == NULL)
+		{
+#ifdef WAPI_FULL_LOG
+			printf("[-] Failed to find NtQueryTimerResolution\n");
+#endif
+			return NULL;
+		}
+#ifdef WAPI_FULL_LOG
+		printf("[+] Found NtQueryTimerResolution address. Address --> 0x%x\n", (size_t)ntQueryTimerResolution);
+		printf("[*] Calling NtQueryTimerResolution...\n");
+#endif
+		NTSTATUS result = ntQueryTimerResolution(MinimumResolution, MaximumResolution, CurrentResolution);
+#ifdef WAPI_FULL_LOG
+		printf("[+] result --> %d\n\n", result);
+#endif
+		return result;
+	}
 }

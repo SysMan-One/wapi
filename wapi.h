@@ -175,4 +175,11 @@ namespace _wapi_ntdll {
 			IN BOOLEAN              SetResolution,
 			OUT PULONG              CurrentResolution);
 
+	//----------------------------
+	// NtQueryTimerResolution
+	NTSYSAPI NTSTATUS NTAPI NtQueryTimerResolution(
+			OUT PULONG              MinimumResolution,
+			OUT PULONG              MaximumResolution,
+			OUT PULONG              CurrentResolution);
+
 }
