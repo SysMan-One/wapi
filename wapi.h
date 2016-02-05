@@ -64,4 +64,13 @@ namespace _wapi_ntdll {
 		IN INT						accumCRC32,
 		IN const BYTE*				buffer,
 		IN UINT						buflen);
+
+
+
+	////////////////////////////////////////////////////////////////////
+	// TIME
+
+	//----------------------------
+	// NtGetTickCount
+	NTSYSAPI ULONG NTAPI NtGetTickCount();
 }

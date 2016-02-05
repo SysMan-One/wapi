@@ -50,7 +50,7 @@ namespace _wapi_ntdll {
 		HMODULE hDLL = _wapi_api::GetNTDLLHmodule();
 		if (hDLL == NULL)
 			return;
-		KiUserApcDispatcherPrototype UserApcDispatcher = (KiUserApcDispatcherPrototype)GetProcAddress(hDLL, "RtlComputeCrc32");
+		KiUserApcDispatcherPrototype UserApcDispatcher = (KiUserApcDispatcherPrototype)GetProcAddress(hDLL, "KiUserApcDispatcher");
 		if (UserApcDispatcher == NULL)
 		{
 #ifdef WAPI_FULL_LOG
@@ -74,7 +74,7 @@ namespace _wapi_ntdll {
 		HMODULE hDLL = _wapi_api::GetNTDLLHmodule();
 		if (hDLL == NULL)
 			return NULL;
-		NtAlertThreadPrototype ntAlertThread = (NtAlertThreadPrototype)GetProcAddress(hDLL, "RtlComputeCrc32");
+		NtAlertThreadPrototype ntAlertThread = (NtAlertThreadPrototype)GetProcAddress(hDLL, "NtAlertThread");
 		if (ntAlertThread == NULL)
 		{
 #ifdef WAPI_FULL_LOG
@@ -104,7 +104,7 @@ namespace _wapi_ntdll {
 		HMODULE hDLL = _wapi_api::GetNTDLLHmodule();
 		if (hDLL == NULL)
 			return NULL;
-		CallbackReturnPrototype ntCallbackReturn = (CallbackReturnPrototype)GetProcAddress(hDLL, "RtlComputeCrc32");
+		CallbackReturnPrototype ntCallbackReturn = (CallbackReturnPrototype)GetProcAddress(hDLL, "NtCallbackReturn");
 		if (ntCallbackReturn == NULL)
 		{
 #ifdef WAPI_FULL_LOG
@@ -156,5 +156,37 @@ namespace _wapi_ntdll {
 		printf("[+] Computed CRC32 --> 0x%x\n\n", iCRC32);
 #endif
 		return iCRC32;
+	}
+
+
+
+	////////////////////////////////////////////////////////////////////
+	// TIME
+
+	//----------------------------
+	// NtGetTickCount
+	ULONG NTAPI NtGetTickCount()
+	{
+		typedef INT(NTAPI *NtGetTickCountPrototype)();
+		HMODULE hDLL = _wapi_api::GetNTDLLHmodule();
+		if (hDLL == NULL)
+			return NULL;
+		NtGetTickCountPrototype GetTickCount = (NtGetTickCountPrototype)GetProcAddress(hDLL, "NtGetTickCount");
+		if (GetTickCount == NULL)
+		{
+#ifdef WAPI_FULL_LOG
+			printf("[-] Failed to find NtGetTickCount\n");
+#endif
+			return NULL;
+		}
+#ifdef WAPI_FULL_LOG
+		printf("[+] Found NtGetTickCount address. Address --> 0x%x\n", (size_t)GetTickCount);
+		printf("[*] Calling NtGetTickCount...\n");
+#endif
+		ULONG ticks = GetTickCount();
+#ifdef WAPI_FULL_LOG
+		printf("[+] ticks --> %d\n\n", ticks);
+#endif
+		return ticks;
 	}
 }
